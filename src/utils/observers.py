@@ -1,5 +1,5 @@
 from typing import Union
-from model import Shipping, State
+from src.models.db_models import Shipping, State
 
 class StateObserver:
 

@@ -1,9 +1,8 @@
-from sqlalchemy import create_engine, Column, Integer, String, Text, Enum, ForeignKey, DateTime
+from sqlalchemy import create_engine, Column, Integer, String, Text, Enum, ForeignKey, DateTime, func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship 
 import enum
 from typing import Type
-from datetime import datetime
 
 DATABASE_URL = "sqlite:///shipping.db" 
 engine = create_engine(DATABASE_URL, echo=True)
@@ -41,10 +40,12 @@ class State(Base):
      shipping_id = Column(Integer, ForeignKey('shipments.id'))
      state = Column(Enum(ShippingState), nullable=False)
      location = Column(String(100), nullable=False)
-     timestamp = Column(DateTime, default=DateTime)     
+     distance = Column(Integer, nullable=False)
+     weight = Column(Integer, nullable=False) 
+     timestamp = Column(DateTime, default=func.now())
      shipping = relationship("Shipping", back_populates="states") 
      
      def __repr__(self) -> str: 
-         return f"<State(state={self.state}, location={self.location}"
+        return f"<State(state={self.state}, location={self.location})>\n"
 
 Base.metadata.create_all(engine)
