@@ -49,7 +49,3 @@ class ShippingController:
             session.rollback()
             return f"Error adding state: {str(e)}"
 
-# Example of how to use the enum states
-controller = ShippingController()
-print(controller.create_package("123ABC", "Sender Address", "Recipient Address"))
-print(controller.add_state(1, "IN_TRANSIT", "Location A"))

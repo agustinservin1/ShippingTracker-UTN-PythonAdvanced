@@ -9,7 +9,6 @@ def validate_address(func):
             return "Error: Invalid sender address."
         if not re.match(r'^[\w\s,.#-]{5,50}$', recipient_address or ''):
             return "Error: Invalid recipient address."
-
         return func(*args, **kwargs)
     return wrapper
 

@@ -1,6 +1,9 @@
+from typing import Union
+from model import Shipping, State
+
 class StateObserver:
-    """Observer that reacts to changes in package states."""    
-    def update(self, action, data):
+
+    def update(self, action: str, data: Union[Shipping, State])->None:
         if action == "CREATE":
             print(f"Notification: Package {data.tracking_number} was created")
         elif action == "UPDATE":

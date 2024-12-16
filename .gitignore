@@ -1,0 +1,11 @@
+# Ignorar carpetas de caché de Python
+__pycache__/
+*.pyc
+
+# Base de datos SQLite 
+
+*.db
+
+# Entornos virtuales 
+venv/
+env/
