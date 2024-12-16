@@ -1,7 +1,10 @@
-from sqlalchemy import create_engine, Column, Integer, String, Text, Enum
+from sqlalchemy import create_engine, Column, Integer, String, Text, Enum, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, relationship
 import enum
+from datetime import datetime
+from typing import List, Union
+
 
 DATABASE_URL = "sqlite:///shipping.db" 
 engine = create_engine(DATABASE_URL, echo=True)
@@ -26,9 +29,23 @@ class Shipping(Base):
     current_state = Column(Enum(ShippingState), nullable=False, default=ShippingState.CREATED)
     location = Column(String(100), nullable=True)
 
-    def __repr__(self):
+    states = relationship("State", back_populates="shipping", cascade="all, delete-orphan")
+
+    def __repr__(self) -> str:
         return (f"<Shipping(id={self.id}, tracking_number={self.tracking_number}, "
                 f"state={self.current_state}, location={self.location})>")
+
+# State table model
+class State(Base):
+
+     __tablename__ = 'states'
+
+     id = Column(Integer, primary_key=True, autoincrement=True)
+     shipping_id = Column(Integer, ForeignKey('shipments.id'))
+     state = Column(Enum(ShippingState), nullable=False)
+     location = Column(String(100), nullable=False)
+     timestamp = Column(DateTime, default=datetime.utcnow)
+     shipping = relationship("Shipping", back_populates="states") def __repr__(self) -> str: return f"<State(state={self.state}, location={self.location},
 
 # Crear las tablas en la base de datos
 Base.metadata.create_all(engine)

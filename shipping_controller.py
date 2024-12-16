@@ -1,10 +1,22 @@
 from model import Shipping, State, session, ShippingState
+from decorators import validate_address, calculate_costs
+from observers import StateObserver
+from typing import List, Union
 
 class ShippingController:
-    def __init__(self):
-        pass
+    
+    def __init__(self) -> None:
+        self.observers: List[StateObserver] = [StateObserver()]
 
-    def create_package(self, tracking_number, sender_address, recipient_address):
+    def register_observer(self, observer:StateObserver) -> None:
+        self.observers.append(observer)
+
+    def notify_observers(self, action: str, data: Union[Shipping,State]) -> None:
+        for observer in self.observers:
+            observer.update(action, data)  
+
+    @validate_address
+    def create_package(self, tracking_number: str, sender_address: str, recipient_address: str) -> str:
         try:
             package = Shipping(
                 tracking_number=tracking_number,
@@ -18,8 +30,8 @@ class ShippingController:
         except Exception as e:
             session.rollback()
             return f"Error creating package: {str(e)}"
-
-    def add_state(self, package_id, state, location):
+    @calculate_costs
+    def add_state(self, package_id: int, state: str, location: str):
         try:
             package = session.query(Shipping).get(package_id)
             if not package:
