@@ -15,6 +15,18 @@ class PackageRequest(BaseModel):
                 "recipient_address": "456 Recipient Ave, City, Country"
             }
         }
+        
+class PackageUpdateRequest(BaseModel):
+    sender_address: str = Field(..., description="Address of the sender")
+    recipient_address: str = Field(..., description="Address of the recipient")
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "sender_address": "123 Sender St, City, Country",
+                "recipient_address": "456 Recipient Ave, City, Country"
+            }
+        }
 
 class StateRequest(BaseModel):
     package_id: int = Field(..., description="ID of the package")
