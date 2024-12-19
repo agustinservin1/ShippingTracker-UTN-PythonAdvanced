@@ -1,9 +1,10 @@
 from typing import Union
-from src.models.db_models import Shipping, State
+from src.models.shipping import Shipping
+from src.models.shipping_state import ShippingState
 
 class StateObserver:
 
-    def update(self, action: str, data: Union[Shipping, State])->None:
+    def update(self, action: str, data: Union[Shipping, ShippingState])->None:
         if action == "CREATE":
             print(f"Notification: Package {data.tracking_number} was created")
         elif action == "UPDATE":

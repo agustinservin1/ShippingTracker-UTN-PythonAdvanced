@@ -1,72 +1,41 @@
-from fastapi import FastAPI, HTTPException, Query, Request
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from src.controllers.controller import ShippingController
-from src.models.request_models import PackageRequest, StateRequest
-from src.models.db_models import ShippingState
+from src.api.shipping_router import router as shipping_router
+from src.api.shipping_state_router import router as shipping_state_router
+from src.database.database import engine, Base
+from src.core.exceptions import ShippingException
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Shipping Tracker API",
-    description="Documentación interactiva para la API de gestión de envíos.",
-    version="1.0.0"
+    description="API for managing package shipments and tracking their states",
+    version="1.0.0",
+    docs_url="/", 
+    redoc_url="/redoc"  
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  #ver
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+app.include_router(shipping_router, prefix="/shipping", tags=["Shipping"])
+app.include_router(shipping_state_router, prefix="/shipping-state", tags=["Shipping State"])
+@app.exception_handler(ShippingException)
+async def shipping_exception_handler(request: Request, exc: ShippingException):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"detail": exc.detail},
     )
-controller = ShippingController()
-@app.exception_handler(Exception)
-async def exception_handler(request: Request, exc: Exception):
-     return JSONResponse(
-           status_code=500,
-           content={"message": str(exc)
-            })
 
-@app.get("/package/{tracking_number}")
-def get_package(tracking_number: str):
-    result = controller.get_package(tracking_number)
-    if "Error" in result:
-        raise HTTPException(status_code=404, detail=result)
-    return {"package": result}
-
-@app.get("/package/{tracking_number}/states")
-def get_package_states(tracking_number: str):
-    result = controller.get_package_states(tracking_number)
-    if "Error" in result:
-        raise HTTPException(status_code=404, detail=result)
-    return {"states": result}
-
-@app.get("/packages")
-def get_all_packages():
-    result = controller.get_all_packages()
-    return {"packages": result}
-
-@app.post("/create_package")
-def create_package(request: PackageRequest):
-    result = controller.create_package(
-        tracking_number=request.tracking_number,
-        sender_address=request.sender_address,
-        recipient_address=request.recipient_address
-    )
-    if "Error" in result:
-        raise HTTPException(status_code=400, detail=result)
-    return {"message": result}
-
-@app.post("/add_state")
-def add_state(
-    request:StateRequest,
-    state: ShippingState = Query(...) 
-    ):
-    try:
-        state_value = state.value
-        result = controller.add_state(
-            package_id=request.package_id,
-            state=state_value,
-            location=request.location,
-            distance=request.distance,
-            weight=request.weight
-        )
-        if "Error" in result:
-            raise HTTPException(status_code=400, detail=result)
-        return {"message": result}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+@app.get("/", include_in_schema=False)
+async def root():
+    return {
+        "message": "Welcome to the Shipping Tracker API",
+        "docs_url": "/docs",
+        "redoc_url": "/redoc"
+    }
