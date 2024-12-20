@@ -12,6 +12,7 @@ class ShippingService(ObservableEntity):
     def __init__(self, db: Session = Depends(get_db)):
         super().__init__()
         self.db = db
+        self.add_observer(EmailObserver()) 
 
     def get_package(self, tracking_number: str) -> Shipping:
         package = self.db.query(Shipping).filter_by(tracking_number=tracking_number).first()

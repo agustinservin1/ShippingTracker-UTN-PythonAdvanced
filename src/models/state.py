@@ -18,12 +18,21 @@ class State(Base):
     def __repr__(self) -> str:
         return f"State(id={self.id}, state={self.state}, location={self.location})"
 
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "state": self.state,
-            "location": self.location,
-            "distance": self.distance,
-            "weight": self.weight,
-            "timestamp": self.timestamp.isoformat() if self.timestamp else None
-        }
+    def to_summary_dict(self):
+       return { "state_added": 
+                { 
+                    "id_state": self.id,
+                    "state": self.state,
+                    "distance": self.distance,
+                    "timestamp": self.timestamp.isoformat() if self.timestamp else None,
+                    "location": self.location
+                },
+                "shipping": { 
+                    "id_shipping": self.shipping_id,
+                    "tracking_number": self.shipping.tracking_number,
+                    "sender_address": self.shipping.sender_address,
+                    "recipient_address": self.shipping.recipient_address,
+                    "email": self.shipping.email,
+                    "location": self.shipping.location
+                    }
+         }

@@ -12,7 +12,7 @@ class ShippingStateService(ObservableEntity):
     def __init__(self, db: Session = Depends(get_db)):
         super().__init__()  
         self.db = db
-
+        self.add_observer(EmailObserver())
 
     def get_package_states(self, tracking_number: str) -> List[dict]:
         package = self.db.query(Shipping).filter_by(tracking_number=tracking_number).first()
@@ -51,7 +51,7 @@ class ShippingStateService(ObservableEntity):
             self.db.refresh(state_instance)
             self.notify_observers("UPDATE", state_instance)
 
-            return state_instance
+            return state_instance.to_summary_dict()
         except Exception as e:
             self.db.rollback()
             raise HTTPException(status_code=400, detail=str(e))
