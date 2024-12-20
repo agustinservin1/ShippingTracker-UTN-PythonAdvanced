@@ -10,6 +10,7 @@ class Shipping(Base):
     recipient_address = Column(Text, nullable=False)
     current_state = Column(String(20), nullable=False)
     location = Column(String(100))
+    email = Column(String(100), nullable=False) 
     is_active = Column(Boolean, default=True) 
 
     states = relationship("State", back_populates="shipping", cascade="all, delete-orphan")
@@ -26,5 +27,6 @@ class Shipping(Base):
             "recipient_address": self.recipient_address,
             "current_state": self.current_state,
             "location": self.location,
+            "email": self.email,
             "is_active": self.is_active
         }

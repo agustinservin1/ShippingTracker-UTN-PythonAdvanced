@@ -9,11 +9,11 @@ class ObservableEntity:
     def add_observer(self, observer: Observer) -> None:
         if observer not in self._observers:
             self._observers.append(observer)
-
+    
     def remove_observer(self, observer: Observer) -> None:
-        self._observers.remove(observer)
+        if observer in self._observers:
+          self._observers.remove(observer)
 
     def notify_observers(self, action: str, data: Union[Shipping, State]) -> None:
         for observer in self._observers:
-            logger.info(f"Notifying observer with action {action} and data {data}")
-            observer.update(action, data)
+             observer.update(action, data)

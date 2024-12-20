@@ -6,25 +6,29 @@ class PackageRequest(BaseModel):
     tracking_number: str = Field(..., description="Unique tracking number for the package")
     sender_address: str = Field(..., description="Address of the sender")
     recipient_address: str = Field(..., description="Address of the recipient")
+    email: str = Field(..., description="Email address of the recipient")
 
     class Config:
         json_schema_extra = {
             "example": {
                 "tracking_number": "TRK123456789",
                 "sender_address": "123 Sender St, City, Country",
-                "recipient_address": "456 Recipient Ave, City, Country"
+                "recipient_address": "456 Recipient Ave, City, Country",
+                "email": "email@example.com"
             }
         }
         
 class PackageUpdateRequest(BaseModel):
     sender_address: str = Field(..., description="Address of the sender")
     recipient_address: str = Field(..., description="Address of the recipient")
+    email: str = Field(..., description="Email address of the recipient")
 
     class Config:
         json_schema_extra = {
             "example": {
                 "sender_address": "123 Sender St, City, Country",
-                "recipient_address": "456 Recipient Ave, City, Country"
+                "recipient_address": "456 Recipient Ave, City, Country",
+                "email": "email@example.com"
             }
         }
 
