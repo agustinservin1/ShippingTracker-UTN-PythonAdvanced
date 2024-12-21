@@ -1,8 +1,12 @@
-def calculate_costs(func): 
+from functools import wraps
+from typing import Callable
+def calculate_costs(func:Callable): 
+    @wraps(func)  # Preserves the metadata of the original function.
     def wrapper(*args, **kwargs):
-         distance = kwargs.get('distance', 1)
-         weight = kwargs.get('weight', 1) 
-         cost = distance * weight * 0.5
-         result = func(*args, **kwargs)
-         return f"{result} | Estimated cost: ${cost:.2f}"
+          request = kwargs.get('request')
+          distance = request.distance if request and hasattr(request, 'distance') else 1
+          weight = request.weight if request and hasattr(request, 'weight') else 1
+          cost = distance * weight * 0.5
+          result = func(*args, **kwargs)
+          return f"{result} | Estimated cost: ${cost:.2f}"
     return wrapper 

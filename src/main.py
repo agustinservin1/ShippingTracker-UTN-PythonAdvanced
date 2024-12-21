@@ -10,6 +10,7 @@ from src.service.shipping_service import ShippingService
 from src.service.shipping_state_service import   ShippingStateService
 from dotenv import load_dotenv
 
+
 load_dotenv()
 Base.metadata.create_all(bind=engine)
 

@@ -3,8 +3,7 @@ from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 from src.database.database import get_db
 from src.models import Shipping
-from src.models.schemas import PackageRequest,PackageUpdateRequest
-from src.utils.email_service.email_service import EmailService
+from src.models.schemas import PackageRequest, PackageUpdateRequest
 from src.utils.observer.subject import ObservableEntity 
 from src.utils.observer.observers import EmailObserver
 from src.utils.decorators import validate_address
@@ -41,7 +40,6 @@ class ShippingService(ObservableEntity):
         except Exception as e:
             self.db.rollback()
             raise HTTPException(status_code=400, detail=str(e))
-    @validate_address        
     def update_package(self, package_id: int, request: PackageUpdateRequest) -> Shipping:
         package = self.db.query(Shipping).filter_by(id=package_id).first()
         if not package:

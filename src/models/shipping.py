@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Text, Boolean
 from sqlalchemy.orm import relationship
 from src.database.database import Base 
+
 class Shipping(Base):
     __tablename__ = 'shipments'
 

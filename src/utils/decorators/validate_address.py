@@ -1,8 +1,11 @@
+from functools import wraps
+from typing import Callable
 import re
-def validate_address(func):
+def validate_address(func: Callable):
+    @wraps(func)
     def wrapper(*args, **kwargs):
-        request = kwargs.get('request')
-        sender_address = request.sender_address if request else None  
+        request = args[0] if args else None
+        sender_address = request.sender_address if request else None
         recipient_address = request.recipient_address if request else None
         
         if not re.match(r'^[\w\s,.#-]{5,50}$', sender_address or ''):

@@ -6,9 +6,7 @@ from src.models import State, Shipping, ShippingState
 from src.models.schemas import StateRequest
 from src.utils.observer.subject import ObservableEntity 
 from src.utils.observer.observers import EmailObserver
-from src.utils.decorators import calculate_cost
-
-
+from src.utils.decorators import calculate_costs
 
 class ShippingStateService(ObservableEntity):
     def __init__(self, db: Session = Depends(get_db)):
@@ -25,7 +23,7 @@ class ShippingStateService(ObservableEntity):
         if not states:
             raise HTTPException(status_code=404, detail="No states found for package")
         return states
-    @calculate_cost
+    #@calculate_cost
     def add_state(self, request: StateRequest, state: str) -> State:
         if not ShippingState.is_valid(state):
             raise HTTPException(
