@@ -1,7 +1,7 @@
 from functools import wraps
 from typing import Callable
 def calculate_costs(func:Callable): 
-    @wraps(func)  # Preserves the metadata of the original function.
+    @wraps(func)  
     def wrapper(*args, **kwargs):
           request = kwargs.get('request')
           distance = request.distance if request and hasattr(request, 'distance') else 1
