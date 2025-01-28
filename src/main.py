@@ -9,7 +9,7 @@ from src.utils.observer.observers import EmailObserver
 from src.service.shipping_service import ShippingService
 from src.service.shipping_state_service import   ShippingStateService
 from dotenv import load_dotenv
-
+from src.api.logger_router import router as router_logger
 
 load_dotenv()
 Base.metadata.create_all(bind=engine)
@@ -39,6 +39,7 @@ shipping_state_service.add_observer(email_observer)
 
 app.include_router(shipping_router, prefix="/shipping", tags=["Shipping"])
 app.include_router(shipping_state_router, prefix="/shipping-state", tags=["Shipping State"])
+app.include_router(router_logger, prefix="/logs", tags=["Logs"])
 @app.exception_handler(ShippingException)
 async def shipping_exception_handler(request: Request, exc: ShippingException):
     return JSONResponse(

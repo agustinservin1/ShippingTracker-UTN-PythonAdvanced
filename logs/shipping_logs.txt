@@ -1,0 +1,6 @@
+[2025-01-27 20:16:42] 127.0.0.1:55012 | Level: INFO | Service: shipping | Message: Package updated: 12345 | Extra: {"package_id": 2, "changes": {"sender_address": "123 Sender St, City, Country", "recipient_address": "456 Recipient Ave, City, Country", "email": "agustin@example.com"}}
+[2025-01-27 20:48:06] 127.0.0.1:56187 | Level: INFO | Service: shipping_state | Message: State updated to Delivered for package 1 | Extra: {"package_id": 1, "new_state": "Delivered", "location": "Distribution Center A"}
+[2025-01-27 20:48:28] 127.0.0.1:56193 | Level: INFO | Service: shipping | Message: Package updated: TRK123456789 | Extra: {"package_id": 1}
+[2025-01-27 21:00:52] 127.0.0.1:56758 | Level: INFO | Service: shipping | Message: Package updated: 12345 | Extra: {"package_id": 2}
+[2025-01-27 21:52:37] 127.0.0.1:58791 | Level: WARNING | Service: shipping | Message: Package not found: ID 1
+[2025-01-27 21:52:57] 127.0.0.1:58806 | Level: INFO | Service: shipping | Message: Package updated: 123456 | Extra: {"package_id": 4}

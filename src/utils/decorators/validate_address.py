@@ -5,7 +5,7 @@ def validate_address(func: Callable):
     @wraps(func)
     def wrapper(*args, **kwargs):
         request = args[0] if args else None
-        sender_address = request.sender_address if request else None
+        sender_address = getattr(request, 'sender_address', None)
         recipient_address = request.recipient_address if request else None
         
         if not re.match(r'^[\w\s,.#-]{5,50}$', sender_address or ''):
